@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -89,13 +90,13 @@ export class AuthService {
     formData.append('password1', password);
     formData.append('password2', password);
     formData.append('group', group);
-    formData.append('photo', photo);
-    return this.http.request<User>('POST', url, { body: formData });
+    formData.append('photo', photo ?? '');
+    return this.http.request<User>('POST', environment.backendRoot + url, { body: formData });
   }
 
   logIn(username: string, password: string): Observable<Token> {
     const url = '/api/log_in/';
-    return this.http.post<Token>(url, { username, password }).pipe(
+    return this.http.post<Token>(environment.backendRoot + url, { username, password }).pipe(
       tap(token => localStorage.setItem('taxi.auth', JSON.stringify(token)))
     );
   }

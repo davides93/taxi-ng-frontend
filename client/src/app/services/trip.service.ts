@@ -1,12 +1,14 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
+import {Observable, of} from 'rxjs';
 import { WebSocketSubject, webSocket } from 'rxjs/webSocket';
-import { map, share } from 'rxjs/operators';
+import {catchError, map, share, tap} from 'rxjs/operators';
 
 import { AuthService, User, createUser } from './auth.service';
+import {environment} from '../../environments/environment';
 
+/** Log a HeroService message with the MessageService */
 export interface Trip {
   id: string;
   created: string;
@@ -53,13 +55,12 @@ export class TripService {
       this.messages.subscribe(message => console.log(message));
     }
   }
-
+  /** GET heroes from the server */
   getTrips(): Observable<Trip[]> {
     const accessToken = AuthService.getAccessToken();
     const headers = new HttpHeaders({ Authorization: `Bearer ${accessToken}` });
-    return this.http.get<Trip[]>('/api/trip/', { headers }).pipe(
-      map((trips: Trip[]) => trips.map((trip: Trip) => createTrip(trip)))
-    );
+    return this.http.get<Trip[]>(environment.backendRoot + '/api/trip/', { headers })
+      .pipe(map((trips: Trip[]) => trips.map((trip: Trip) => createTrip(trip))));
   }
 
   createTrip(trip: Trip): void {
@@ -76,7 +77,7 @@ export class TripService {
   getTrip(id: string): Observable<Trip> {
     const accessToken = AuthService.getAccessToken();
     const headers = new HttpHeaders({ Authorization: `Bearer ${accessToken}` });
-    return this.http.get<Trip>(`/api/trip/${id}/`, { headers }).pipe(
+    return this.http.get<Trip>(environment.backendRoot + `/api/trip/${id}/`, { headers }).pipe(
       map((trip: Trip) => createTrip(trip))
     );
   }

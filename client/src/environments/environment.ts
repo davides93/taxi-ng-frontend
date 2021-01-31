@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  GOOGLE_API_KEY: 'AIzaSyCd4VOUsg-y6DsfFq0jpEXM50jjW3rV2x0'
+  GOOGLE_API_KEY: 'AIzaSyCd4VOUsg-y6DsfFq0jpEXM50jjW3rV2x0',
+  backendRoot: 'https://targaryan.herokuapp.com'
 };
 
 /*
